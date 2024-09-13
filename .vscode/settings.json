@@ -1,16 +1,7 @@
 {
+  "files.eol": "\n",
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  
-  // Override different formatters for different languages
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-
-  // ESLint integration
   "eslint.validate": ["javascript", "typescript", "typescriptreact"],
   "eslint.format.enable": true
 }
