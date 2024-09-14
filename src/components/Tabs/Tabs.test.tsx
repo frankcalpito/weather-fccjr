@@ -53,4 +53,3 @@ describe("Tabs Component", () => {
     expect(tab2Button).toHaveClass("bg-slate-800 text-white");
   });
 });
-
