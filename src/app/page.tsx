@@ -31,15 +31,17 @@ const Home = () => {
   };
 
   return (
-    <div className="container mx-auto min-h-screen p-10">
+    <div className="container mx-auto min-h-screen p-2 md:p-10">
       <SearchBar onLocationSelected={handleAddLocation} />
       <LocationPills locations={locations} />
-      <div className="mt-8 space-y-4">
+      <div
+        className={`mt-8 gap-4 grid grid-cols-1 ${locations.length > 1 ? "md:grid-cols-2" : ""}`}
+      >
         {weatherLoading ? (
           <Spinner /> // Show spinner while weather data is loading
         ) : locations.length > 0 ? (
           locations.map((location, index) => (
-            <div key={index}>
+            <div key={index} className="">
               {location.weather ? (
                 <LocationCard location={location} />
               ) : (

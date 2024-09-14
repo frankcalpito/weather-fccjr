@@ -25,7 +25,7 @@ const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
   ];
 
   return (
-    <div className="bg-gradient-to-r from-blue-300 to-blue-700 border p-8 rounded-lg shadow-md">
+    <div className="bg-gradient-to-r from-blue-300 to-blue-700 border py-4 px-2 md:p-8 rounded-lg shadow-md">
       <h2 className="text-xl font-bold">{name}</h2>
       <CurrentWeatherCard current={current} />
       <Tabs tabs={tabs} />

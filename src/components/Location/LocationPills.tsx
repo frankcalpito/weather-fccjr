@@ -14,11 +14,11 @@ const LocationPills: React.FC<LocationPillsProps> = ({ locations }) => {
   };
 
   return (
-    <div className="flex flex-wrap gap-2 mb-4">
+    <div className="flex flex-wrap gap-2 mb-4 mt-4">
       {locations.map((location, index) => (
         <div
           key={index}
-          className="bg-blue-500 text-white py-1 mt-4 px-3 rounded-full flex items-center space-x-2 cursor-pointer"
+          className="bg-blue-500 text-white py-1 px-3 rounded-full flex items-center space-x-2 cursor-pointer"
           onClick={() => handleRemoveLocation(location.lat, location.long)}
         >
           <span>{location.name}</span>

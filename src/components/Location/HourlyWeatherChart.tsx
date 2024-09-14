@@ -16,7 +16,7 @@ const HourlyWeatherChart: React.FC<HourlyWeatherChartProps> = ({ hourly }) => {
   return (
     <div className="bg-gray-800 rounded-lg shadow-md pt-4">
       <h3 className="text-lg font-semibold ml-4 mb-2 text-white">
-        Hourly Data:
+        Hourly data
       </h3>
       <div className="flex overflow-x-auto space-x-4 p-4 bg-slate-700">
         {hourly.map((hour, index) => (
