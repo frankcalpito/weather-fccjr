@@ -1,3 +1,5 @@
+## Deployed at [https://weather-fccjr.vercel.app/](https://weather-fccjr.vercel.app/)
+
 # Architecture Diagram
 
 ```mermaid
