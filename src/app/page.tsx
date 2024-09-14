@@ -6,9 +6,10 @@ import {
   addLocation,
   fetchWeatherForLocation,
 } from "../lib/features/location/locationSlice";
-import LocationCard from "../components/LocationCard/LocationCard";
+import LocationCard from "../components/Location/LocationCard";
 import SearchBar from "../components/SearchBar/SearchBar";
 import Spinner from "../components/Spinner/Spinner";
+import LocationPills from "../components/Location/LocationPills";
 
 const Home = () => {
   const locations = useSelector((state: RootState) => state.location.locations);
@@ -32,10 +33,11 @@ const Home = () => {
   return (
     <div className="container mx-auto min-h-screen p-10">
       <SearchBar onLocationSelected={handleAddLocation} />
+      <LocationPills locations={locations} />
       <div className="mt-8 space-y-4">
         {weatherLoading ? (
           <Spinner /> // Show spinner while weather data is loading
-        ) : (
+        ) : locations.length > 0 ? (
           locations.map((location, index) => (
             <div key={index}>
               {location.weather ? (
@@ -45,6 +47,10 @@ const Home = () => {
               )}
             </div>
           ))
+        ) : (
+          <div className="mx-auto p-4 shadow-md rounded-lg flex justify-center">
+            Please search and select a location
+          </div>
         )}
       </div>
     </div>

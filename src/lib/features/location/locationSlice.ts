@@ -53,6 +53,15 @@ const locationSlice = createSlice({
         state.locations.push(action.payload);
       }
     },
+    removeLocation: (
+      state,
+      action: PayloadAction<{ lat: number; long: number }>,
+    ) => {
+      state.locations = state.locations.filter(
+        (loc) =>
+          loc.lat !== action.payload.lat || loc.long !== action.payload.long,
+      );
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchWeatherForLocation.fulfilled, (state, action) => {
@@ -67,5 +76,5 @@ const locationSlice = createSlice({
   },
 });
 
-export const { addLocation } = locationSlice.actions;
+export const { addLocation, removeLocation } = locationSlice.actions;
 export default locationSlice.reducer;

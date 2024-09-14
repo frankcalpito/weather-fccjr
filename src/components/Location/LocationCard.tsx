@@ -9,7 +9,7 @@ interface LocationCardProps {
 
 const LocationCard: React.FC<LocationCardProps> = ({ location }) => {
   const { name, weather } = location;
-  const { current, hourly } = weather;
+  const { current, hourly } = weather!;
 
   return (
     <div className="bg-gradient-to-r from-blue-300 to-blue-700 border p-8 rounded-lg shadow-md">
