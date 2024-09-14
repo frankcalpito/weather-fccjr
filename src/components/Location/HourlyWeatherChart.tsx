@@ -1,18 +1,20 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTemperatureHigh, faWater } from "@fortawesome/free-solid-svg-icons";
+import { HourlyData } from "@/lib/features/weather/weatherApi";
 
 interface HourlyWeatherChartProps {
-  hourly: {
-    temp: number;
-    feels_like: number;
-    humidity: number;
-  }[];
+  hourly: HourlyData[];
 }
+
+const formatTime = (timestamp: number) => {
+  const date = new Date(timestamp * 1000);
+  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+};
 
 const HourlyWeatherChart: React.FC<HourlyWeatherChartProps> = ({ hourly }) => {
   return (
-    <div className="mt-8 bg-gray-800 rounded-lg shadow-md pt-4">
+    <div className="bg-gray-800 rounded-lg shadow-md pt-4">
       <h3 className="text-lg font-semibold ml-4 mb-2 text-white">
         Hourly Data:
       </h3>
@@ -22,7 +24,7 @@ const HourlyWeatherChart: React.FC<HourlyWeatherChartProps> = ({ hourly }) => {
             key={index}
             className="bg-white border rounded-lg p-2 shadow-md flex flex-wrap justify-center"
           >
-            <div className="text-sm mb-1">{index}:00</div>
+            <div className="text-sm mb-1">{formatTime(hour.dt)}</div>{" "}
             <div className="flex items-center mb-1">
               <FontAwesomeIcon
                 icon={faTemperatureHigh}

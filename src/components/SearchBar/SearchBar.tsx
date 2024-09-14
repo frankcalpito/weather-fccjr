@@ -18,7 +18,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onLocationSelected }) => {
   const [location, setLocation] = useState("");
   const [placeId, setPlaceId] = useState<string | null>(null);
   const [suggestionsVisible, setSuggestionsVisible] = useState(false);
-  const searchBarRef = useRef<HTMLDivElement>(null); // Ref to the search bar element
+  const searchBarRef = useRef<HTMLDivElement>(null);
 
   const { data: suggestions, isFetching: isFetchingSuggestions } =
     useGetLocationSuggestionsQuery(location, {
