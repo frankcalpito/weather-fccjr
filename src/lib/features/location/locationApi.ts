@@ -12,7 +12,14 @@ export const locationApi = createApi({
     >({
       query: (input) => `search?q=${input}`,
     }),
+    getLocation: builder.query<
+      { result: google.maps.places.PlaceResult },
+      string
+    >({
+      query: (placeId) => `${placeId}`,
+    }),
   }),
 });
 
-export const { useGetLocationSuggestionsQuery } = locationApi;
+export const { useGetLocationSuggestionsQuery, useGetLocationQuery } =
+  locationApi;

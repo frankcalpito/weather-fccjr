@@ -1,77 +1,125 @@
-import React, { useState, useEffect } from "react";
-import { useGetLocationSuggestionsQuery } from "../../lib/api/locationApi";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  useGetLocationSuggestionsQuery,
+  useGetLocationQuery,
+} from "../../lib/features/location/locationApi";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
 
 interface SearchBarProps {
-  onSearch: (city: string) => void;
+  onLocationSelected: (location: {
+    name: string;
+    lat: number;
+    long: number;
+  }) => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
-  const [city, setCity] = useState("");
+const SearchBar: React.FC<SearchBarProps> = ({ onLocationSelected }) => {
+  const [location, setLocation] = useState("");
+  const [placeId, setPlaceId] = useState<string | null>(null);
   const [suggestionsVisible, setSuggestionsVisible] = useState(false);
+  const searchBarRef = useRef<HTMLDivElement>(null); // Ref to the search bar element
 
   const { data: suggestions, isFetching } = useGetLocationSuggestionsQuery(
-    city,
+    location,
     {
-      skip: city.length < 3, // Skip fetching until user has typed at least 3 characters
+      skip: location.length < 3,
     },
   );
 
-  const handleAddLocation = () => {
-    if (city.trim()) {
-      onSearch(city);
-    }
-  };
+  const { data: placeDetails } = useGetLocationQuery(placeId ?? "", {
+    skip: !placeId, // Skip fetching if no placeId is set
+  });
 
-  const handleSuggestionClick = (suggestedCity: string) => {
-    setCity(suggestedCity);
+  const handleSuggestionClick = (suggestedCity: string, id: string) => {
+    setLocation(suggestedCity);
+    setPlaceId(id);
     setSuggestionsVisible(false);
-    onSearch(suggestedCity);
   };
 
   useEffect(() => {
-    if (city.length >= 3) {
+    if (placeDetails?.result.geometry) {
+      const { lat, lng } = placeDetails.result.geometry.location;
+      onLocationSelected({
+        name: location,
+        lat: typeof lat === "function" ? lat() : (lat as number),
+        long: typeof lng === "function" ? lng() : (lng as number),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [placeDetails]);
+
+  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocation(e.target.value);
+    if (e.target.value.length >= 3) {
       setSuggestionsVisible(true);
     } else {
       setSuggestionsVisible(false);
     }
-  }, [city]);
+  };
+
+  useEffect(() => {
+    if (location.length >= 3) {
+      setSuggestionsVisible(true);
+    } else {
+      setSuggestionsVisible(false);
+    }
+  }, [location]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchBarRef.current &&
+        !searchBarRef.current.contains(event.target as Node)
+      ) {
+        setSuggestionsVisible(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   return (
-    <div className="flex flex-col space-y-2 relative">
-      <div className="flex space-x-4">
+    <div className="flex flex-col space-y-2 relative" ref={searchBarRef}>
+      <div className="flex space-x-4 w-full relative justify-end">
         <Input
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          placeholder="Enter city"
+          value={location}
+          onChange={handleLocationChange}
+          placeholder="Enter location"
           className="w-full"
         />
-        <Button onClick={handleAddLocation} className="bg-blue-500 text-white">
-          Add
+        <Button
+          onClick={() => placeId && handleSuggestionClick(location, placeId)}
+          className="bg-blue-500 text-white w-40"
+        >
+          Add location
         </Button>
+        {suggestionsVisible && suggestions && suggestions.length > 0 && (
+          <ul className="absolute top-full mt-2 w-full bg-white border border-gray-300 rounded-lg max-h-48 overflow-y-auto z-10">
+            {isFetching ? (
+              <li className="p-2">Loading...</li>
+            ) : (
+              suggestions.map((suggestion) => (
+                <li
+                  key={suggestion.place_id}
+                  onClick={() =>
+                    handleSuggestionClick(
+                      suggestion.description,
+                      suggestion.place_id,
+                    )
+                  }
+                  className="p-2 cursor-pointer hover:bg-gray-200"
+                >
+                  {suggestion.description}
+                </li>
+              ))
+            )}
+          </ul>
+        )}
       </div>
-
-      {/* Display location suggestions */}
-      {suggestionsVisible && suggestions && suggestions.length > 0 && (
-        <ul className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-lg max-h-48 overflow-y-auto z-10">
-          {isFetching ? (
-            <li className="p-2">Loading...</li>
-          ) : (
-            suggestions.map((suggestion) => (
-              <li
-                key={suggestion.place_id}
-                onClick={() =>
-                  handleSuggestionClick(suggestion.description.split(",")[0])
-                }
-                className="p-2 cursor-pointer hover:bg-gray-200"
-              >
-                {suggestion.description}
-              </li>
-            ))
-          )}
-        </ul>
-      )}
     </div>
   );
 };

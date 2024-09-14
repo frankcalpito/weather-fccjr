@@ -4,7 +4,7 @@ import SearchBar from "./SearchBar";
 
 describe("SearchBar Component", () => {
   it("renders input and button", () => {
-    render(<SearchBar onSearch={() => {}} />);
+    render(<SearchBar onLocationSelected={() => {}} />);
 
     const input = screen.getByPlaceholderText("Enter city");
     const button = screen.getByText("Search");
@@ -14,8 +14,8 @@ describe("SearchBar Component", () => {
   });
 
   it("calls onSearch with the correct city when search button is clicked", () => {
-    const handleSearch = jest.fn();
-    render(<SearchBar onSearch={handleSearch} />);
+    const handleSelect = jest.fn();
+    render(<SearchBar onLocationSelected={handleSelect} />);
 
     const input = screen.getByPlaceholderText("Enter city");
     const button = screen.getByText("Search");
@@ -23,16 +23,16 @@ describe("SearchBar Component", () => {
     fireEvent.change(input, { target: { value: "London" } });
     fireEvent.click(button);
 
-    expect(handleSearch).toHaveBeenCalledWith("London");
+    expect(handleSelect).toHaveBeenCalledWith("London");
   });
 
   it("does not call onSearch if input is empty", () => {
-    const handleSearch = jest.fn();
-    render(<SearchBar onSearch={handleSearch} />);
+    const handleSelect = jest.fn();
+    render(<SearchBar onLocationSelected={handleSelect} />);
 
     const button = screen.getByText("Search");
     fireEvent.click(button);
 
-    expect(handleSearch).not.toHaveBeenCalled();
+    expect(handleSelect).not.toHaveBeenCalled();
   });
 });
