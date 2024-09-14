@@ -1,38 +1,120 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import {
+  useGetLocationSuggestionsQuery,
+  useGetLocationQuery,
+  useFetchMyLocationQuery,
+} from "../../lib/features/location/locationApi";
 import SearchBar from "./SearchBar";
 
-describe("SearchBar Component", () => {
-  it("renders input and button", () => {
-    render(<SearchBar onLocationSelected={() => {}} />);
+jest.mock("../../lib/features/location/locationApi");
 
-    const input = screen.getByPlaceholderText("Enter city");
-    const button = screen.getByText("Search");
+describe("SearchBar", () => {
+  let mockOnLocationSelected = jest.fn();
 
+  const mockSuggestions = [
+    { place_id: "1", description: "New York" },
+    { place_id: "2", description: "Los Angeles" },
+  ];
+
+  const mockPlaceDetails = {
+    result: {
+      geometry: { location: { lat: () => 40.7128, lng: () => -74.006 } },
+    },
+  };
+
+  const mockCurrentLocation = {
+    lat: 51.5074,
+    long: -0.1278,
+  };
+
+  beforeEach(() => {
+    (useGetLocationSuggestionsQuery as jest.Mock).mockReturnValue({
+      data: mockSuggestions,
+      isFetching: false,
+    });
+
+    (useGetLocationQuery as jest.Mock).mockReturnValue({
+      data: mockPlaceDetails,
+    });
+
+    (useFetchMyLocationQuery as jest.Mock).mockReturnValue({
+      data: mockCurrentLocation,
+      isFetching: false,
+    });
+  });
+
+  afterAll(() => {
+    jest.clearAllMocks();
+  });
+
+  it("renders input field and placeholder", () => {
+    render(<SearchBar onLocationSelected={mockOnLocationSelected} />);
+
+    const input = screen.getByPlaceholderText(
+      "Enter a location to be added to the list",
+    );
     expect(input).toBeInTheDocument();
-    expect(button).toBeInTheDocument();
   });
 
-  it("calls onSearch with the correct city when search button is clicked", () => {
-    const handleSelect = jest.fn();
-    render(<SearchBar onLocationSelected={handleSelect} />);
+  it("fetches suggestions when typing a location", async () => {
+    render(<SearchBar onLocationSelected={mockOnLocationSelected} />);
 
-    const input = screen.getByPlaceholderText("Enter city");
-    const button = screen.getByText("Search");
+    const input = screen.getByPlaceholderText(
+      "Enter a location to be added to the list",
+    );
+    fireEvent.change(input, { target: { value: "New" } });
 
-    fireEvent.change(input, { target: { value: "London" } });
-    fireEvent.click(button);
-
-    expect(handleSelect).toHaveBeenCalledWith("London");
+    await waitFor(() => {
+      expect(screen.getByText("New York")).toBeInTheDocument();
+      expect(screen.getByText("Los Angeles")).toBeInTheDocument();
+    });
   });
 
-  it("does not call onSearch if input is empty", () => {
-    const handleSelect = jest.fn();
-    render(<SearchBar onLocationSelected={handleSelect} />);
+  it("selects a suggestion and triggers onLocationSelected", async () => {
+    // Reset the mock function
+    mockOnLocationSelected = jest.fn();
 
-    const button = screen.getByText("Search");
-    fireEvent.click(button);
+    render(<SearchBar onLocationSelected={mockOnLocationSelected} />);
 
-    expect(handleSelect).not.toHaveBeenCalled();
+    const input = screen.getByPlaceholderText(
+      "Enter a location to be added to the list",
+    );
+    fireEvent.change(input, { target: { value: "New" } });
+
+    await waitFor(() => {
+      expect(screen.getByText("New York")).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByText("New York"));
+
+    await waitFor(() => {
+      expect(mockOnLocationSelected).toHaveBeenCalledTimes(2); // 1 - during init, 2 - when location selected
+    });
+  });
+
+  it("fetches current location data and calls onLocationSelected", async () => {
+    render(<SearchBar onLocationSelected={mockOnLocationSelected} />);
+
+    await waitFor(() => {
+      expect(mockOnLocationSelected).toHaveBeenCalledWith({
+        name: "Current Location",
+        lat: 51.5074,
+        long: -0.1278,
+      });
+    });
+  });
+
+  it("does not show suggestions when input length is less than 3 characters", async () => {
+    render(<SearchBar onLocationSelected={mockOnLocationSelected} />);
+
+    const input = screen.getByPlaceholderText(
+      "Enter a location to be added to the list",
+    );
+    fireEvent.change(input, { target: { value: "Ne" } });
+
+    await waitFor(() => {
+      expect(screen.queryByText("New York")).not.toBeInTheDocument();
+    });
   });
 });

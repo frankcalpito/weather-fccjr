@@ -1,4 +1,26 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Architecture Diagram
+
+```mermaid
+graph TD
+    A[User Interface] -->|Select/Locate Location| B[Search Bar]
+    B -->|Autocomplete| C[Maps API]
+    C -->|Get Place ID| D[Places API]
+    D -->|Get Lat/Long| E[App State]
+    E -->|Send Lat/Long| F[OpenWeatherMap API]
+    F -->|Weather Data| G[Weather Data Display]
+
+    subgraph API_Flow
+        C
+        D
+        F
+    end
+```
+
+## API flow
+
+1. The app gets the current location or a location is selected from the search box which is autocompleted by Maps API.
+2. A location's placeID is then sent to Places API to get the lat and long.
+3. The lat and long are then sent to OpenWeatherApp
 
 ## Getting Started
 
@@ -6,8 +28,10 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 2. Create .env.local file in root
 
 ```
+
 NEXT_PUBLIC_OPEN_WEATHER_API_KEY=
 NEXT_PUBLIC_GOOGLE_API_KEY=
+
 ```
 
 3. un the development server:
@@ -24,22 +48,7 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deployment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This app is connected to Vercel and will build production everytime a push is made to master
 
