@@ -1,11 +1,14 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { weatherApi } from "../weather/weatherApi";
+import { weatherApi, WeatherCurrent, HourlyData } from "../weather/weatherApi";
 
-interface Location {
+export interface Location {
   name: string;
   lat: number;
   long: number;
-  weather?: any;
+  weather?: {
+    current: WeatherCurrent;
+    hourly: HourlyData[];
+  };
 }
 
 interface LocationState {

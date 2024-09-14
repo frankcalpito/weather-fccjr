@@ -18,8 +18,14 @@ export const locationApi = createApi({
     >({
       query: (placeId) => `${placeId}`,
     }),
+    fetchMyLocation: builder.query<{ lat: number; long: number }, void>({
+      query: () => `my`,
+    }),
   }),
 });
 
-export const { useGetLocationSuggestionsQuery, useGetLocationQuery } =
-  locationApi;
+export const {
+  useGetLocationSuggestionsQuery,
+  useGetLocationQuery,
+  useFetchMyLocationQuery,
+} = locationApi;

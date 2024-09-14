@@ -1,5 +1,20 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+export interface WeatherCurrent {
+  temp: number;
+  feels_like: number;
+  humidity: number;
+  sunrise: number;
+  sunset: number;
+  weather: { description: string; icon: string }[];
+}
+
+export interface HourlyData {
+  temp: number;
+  feels_like: number;
+  humidity: number;
+}
+
 export const weatherApi = createApi({
   reducerPath: "weatherApi",
   baseQuery: fetchBaseQuery({

@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import {
   useGetLocationSuggestionsQuery,
   useGetLocationQuery,
+  useFetchMyLocationQuery,
 } from "../../lib/features/location/locationApi";
 import Input from "../Input/Input";
-import Button from "../Button/Button";
 
 interface SearchBarProps {
   onLocationSelected: (location: {
@@ -20,16 +20,16 @@ const SearchBar: React.FC<SearchBarProps> = ({ onLocationSelected }) => {
   const [suggestionsVisible, setSuggestionsVisible] = useState(false);
   const searchBarRef = useRef<HTMLDivElement>(null); // Ref to the search bar element
 
-  const { data: suggestions, isFetching } = useGetLocationSuggestionsQuery(
-    location,
-    {
+  const { data: suggestions, isFetching: isFetchingSuggestions } =
+    useGetLocationSuggestionsQuery(location, {
       skip: location.length < 3,
-    },
-  );
+    });
 
   const { data: placeDetails } = useGetLocationQuery(placeId ?? "", {
     skip: !placeId, // Skip fetching if no placeId is set
   });
+
+  const { data: myLocation } = useFetchMyLocationQuery();
 
   const handleSuggestionClick = (suggestedCity: string, id: string) => {
     setLocation(suggestedCity);
@@ -45,6 +45,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onLocationSelected }) => {
         lat: typeof lat === "function" ? lat() : (lat as number),
         long: typeof lng === "function" ? lng() : (lng as number),
       });
+      setLocation("");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [placeDetails]);
@@ -57,6 +58,17 @@ const SearchBar: React.FC<SearchBarProps> = ({ onLocationSelected }) => {
       setSuggestionsVisible(false);
     }
   };
+
+  useEffect(() => {
+    if (myLocation) {
+      onLocationSelected({
+        name: "Current Location",
+        lat: myLocation.lat,
+        long: myLocation.long,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [myLocation]);
 
   useEffect(() => {
     if (location.length >= 3) {
@@ -88,18 +100,12 @@ const SearchBar: React.FC<SearchBarProps> = ({ onLocationSelected }) => {
         <Input
           value={location}
           onChange={handleLocationChange}
-          placeholder="Enter location"
+          placeholder="Enter a location to be added to the list"
           className="w-full"
         />
-        <Button
-          onClick={() => placeId && handleSuggestionClick(location, placeId)}
-          className="bg-blue-500 text-white w-40"
-        >
-          Add location
-        </Button>
         {suggestionsVisible && suggestions && suggestions.length > 0 && (
           <ul className="absolute top-full mt-2 w-full bg-white border border-gray-300 rounded-lg max-h-48 overflow-y-auto z-10">
-            {isFetching ? (
+            {isFetchingSuggestions ? (
               <li className="p-2">Loading...</li>
             ) : (
               suggestions.map((suggestion) => (
