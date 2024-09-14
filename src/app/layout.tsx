@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import StoreProvider from "@/lib/StoreProvider";
-
+import { Analytics } from "@vercel/analytics/react";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 config.autoAddCss = false;
@@ -31,6 +31,7 @@ export default function RootLayout({
   return (
     <StoreProvider>
       <html lang="en">
+        <Analytics />
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
