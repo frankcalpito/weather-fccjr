@@ -6,7 +6,7 @@ import {
   addLocation,
   fetchWeatherForLocation,
 } from "../lib/features/location/locationSlice";
-import WeatherCard from "../components/WeatherCard/WeatherCard";
+import LocationCard from "../components/LocationCard/LocationCard";
 import SearchBar from "../components/SearchBar/SearchBar";
 import Spinner from "../components/Spinner/Spinner";
 
@@ -15,7 +15,7 @@ const Home = () => {
   const dispatch: AppDispatch = useDispatch();
 
   // Track loading state for weather data
-  const weatherLoading = locations.some((loc) => loc.weather === undefined);
+  const weatherLoading = locations.some((loc) => !loc.weather);
 
   const handleAddLocation = (location: {
     name: string;
@@ -39,11 +39,7 @@ const Home = () => {
           locations.map((location, index) => (
             <div key={index}>
               {location.weather ? (
-                <WeatherCard
-                  city={location.name}
-                  temp={location.weather.main.temp}
-                  description={location.weather.weather[0].description}
-                />
+                <LocationCard location={location} />
               ) : (
                 <p>Loading weather for {location.name}...</p>
               )}

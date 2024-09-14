@@ -1,6 +1,5 @@
-// lib/features/location/locationSlice.ts
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { weatherApi } from "../weather/weatherApi"; // Import weatherApi
+import { weatherApi } from "../weather/weatherApi";
 
 interface Location {
   name: string;
@@ -25,7 +24,6 @@ export const fetchWeatherForLocation = createAsyncThunk(
     { dispatch, rejectWithValue },
   ) => {
     try {
-      // Call RTK Query's getWeatherByCoords endpoint
       const { lat, long } = location;
       const result = await dispatch(
         weatherApi.endpoints.getWeatherByCoords.initiate({ lat, long }),

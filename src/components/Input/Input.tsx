@@ -21,7 +21,7 @@ const Input: React.FC<InputProps> = ({
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      className={`border hover:border-blue-700 p-2 rounded-lg ${className}`}
+      className={`border hover:border-blue-700 focus:border-blue-900 p-2 rounded-lg ${className}`}
     />
   );
 };
