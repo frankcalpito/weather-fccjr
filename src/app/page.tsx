@@ -1,15 +1,15 @@
 "use client";
 
-import { useSelector, useDispatch } from "react-redux";
-import { RootState, AppDispatch } from "../lib/store";
+import { useDispatch, useSelector } from "react-redux";
+import LocationCard from "../components/Location/LocationCard";
+import LocationPills from "../components/Location/LocationPills";
+import SearchBar from "../components/SearchBar/SearchBar";
+import Spinner from "../components/Spinner/Spinner";
 import {
   addLocation,
   fetchWeatherForLocation,
 } from "../lib/features/location/locationSlice";
-import LocationCard from "../components/Location/LocationCard";
-import SearchBar from "../components/SearchBar/SearchBar";
-import Spinner from "../components/Spinner/Spinner";
-import LocationPills from "../components/Location/LocationPills";
+import { AppDispatch, RootState } from "../lib/store";
 
 const Home = () => {
   const locations = useSelector((state: RootState) => state.location.locations);
@@ -31,7 +31,7 @@ const Home = () => {
   };
 
   return (
-    <div className="container mx-auto min-h-screen p-2 md:p-10">
+    <div className="container mx-auto p-2 md:p-10">
       <SearchBar onLocationSelected={handleAddLocation} />
       <LocationPills locations={locations} />
       <div

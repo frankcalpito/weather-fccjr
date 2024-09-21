@@ -1,10 +1,12 @@
+import { Menu } from "@/components/Menu/Menu";
+import StoreProvider from "@/lib/StoreProvider";
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+import { fa1 } from "@fortawesome/free-solid-svg-icons";
+import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import StoreProvider from "@/lib/StoreProvider";
-import { Analytics } from "@vercel/analytics/react";
-import { config } from "@fortawesome/fontawesome-svg-core";
-import "@fortawesome/fontawesome-svg-core/styles.css";
 config.autoAddCss = false;
 
 const geistSans = localFont({
@@ -35,6 +37,7 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
+          <Menu items={[{ label: "test", path: "test", icon: fa1 }]} />
           {children}
         </body>
       </html>

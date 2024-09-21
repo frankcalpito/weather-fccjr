@@ -2,6 +2,26 @@
   "files.eol": "\n",
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "eslint.validate": ["javascript", "typescript", "typescriptreact"],
-  "eslint.format.enable": true
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always",
+    "source.organizeImports": "always"
+  },
+  "eslint.validate": ["javascript", "typescript", "typescriptreact", "json"],
+  "eslint.format.enable": true,
+  "eslint.options": {
+    "extensions": [".js", ".jsx", ".ts", ".tsx"]
+  },
+  "prettier.requireConfig": true,
+  "tailwindCSS.experimental.classRegex": [
+    ["className\\s*?=\\s*?[\"'`]([^\"'`]*?)[\"'`]"],
+    ["[cC]lassName\\s*?=\\s*?[\"'`]([^\"'`]*?)[\"'`]"]
+  ],
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+  },
+  "tailwindCSS.emmetCompletions": true
 }

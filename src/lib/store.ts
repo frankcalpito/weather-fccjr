@@ -1,7 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { weatherApi } from "./features/weather/weatherApi";
 import { locationApi } from "./features/location/locationApi";
-import locationReducer from "./features/location/locationSlice"; // Import the location slice
+import locationReducer from "./features/location/locationSlice";
+import settingsReducer from "./features/settings/settingsSlice";
+import { weatherApi } from "./features/weather/weatherApi";
 
 export const makeStore = () => {
   return configureStore({
@@ -9,6 +10,7 @@ export const makeStore = () => {
       [weatherApi.reducerPath]: weatherApi.reducer,
       [locationApi.reducerPath]: locationApi.reducer,
       location: locationReducer,
+      settings: settingsReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(
