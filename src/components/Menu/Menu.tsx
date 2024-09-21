@@ -45,7 +45,9 @@ export const Menu = ({ items }: MenuProps) => {
   return (
     <div
       className={`relative w-full top-0 left-0 z-40 transition-all duration-1000 text-white ${
-        menuState === "open" ? "bg-transparent" : "bg-gray-800"
+        menuState === "open"
+          ? "bg-transparent"
+          : "bg-gradient-to-br from-secondary-600 to-primary-700"
       }`}
     >
       {/* Background Overlay */}
@@ -58,7 +60,7 @@ export const Menu = ({ items }: MenuProps) => {
 
       {/* Sliding bg */}
       <div
-        className={`fixed bg-gradient-to-b from-gray-800 to-red-600 transition-all duration-1000 c-quad-1 w-screen h-screen right-0 shadow-inner shadow-black/50 ${
+        className={`fixed bg-gradient-to-b from-primary-900 to-secondary-600 transition-all duration-1000 c-quad-1 w-screen h-screen right-0 shadow-inner shadow-black/50 ${
           menuState === "open"
             ? "translate-none opacity-100"
             : "translate-x-full -translate-y-full -rotate-45 opacity-0 delay-100"
